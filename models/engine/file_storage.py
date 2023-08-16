@@ -4,6 +4,12 @@ Defines the FileStorage class
 """
 import json
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -49,24 +55,20 @@ class FileStorage:
         dictionary = dict()
         for k, v in FileStorage.__objects.items():
             dictionary[k] = v.to_dict()
-        with open(
-            FileStorage.__file_path, 'w', encoding='utf-8'
-            ) as file:
+        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
             json.dump(dictionary, file)
 
     def reload(self):
         """
-        Deserializes the JSON file to __objects 
+        Deserializes the JSON file to __objects
         (only if the JSON file (__file_path) exits);
-        otherwise, do nothing. 
+        otherwise, do nothing.
         If the file doesn't, no exception should be raised.
         """
         try:
-            with open(
-                FileStorage.__file_path, 'r', encoding='utf-8'
-                ) as file:
+            with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
                 json_load = json.load(file)
             for k, v in json_load.items():
                 FileStorage.__objects[k] = BaseModel(**v)
-            except FileNotFoundError:
-                pass
+        except FileNotFoundError:
+            pass
